@@ -1,0 +1,6 @@
+@BlazerCrud_HostAddress = http://localhost:5268
+
+GET {{BlazerCrud_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
