@@ -14,6 +14,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BlazorCrudConStr"));
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "web-frontend",
+                      policy =>
+                      {
+                          policy.AllowAnyMethod()
+                                .AllowAnyHeader()
+                                .AllowAnyOrigin();
+                      });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("web-frontend");
 
 app.UseHttpsRedirection();
 

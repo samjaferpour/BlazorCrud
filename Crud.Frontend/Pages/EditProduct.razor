@@ -1,0 +1,37 @@
+﻿@page "/edit-product/{productId:int}"
+@using Crud.Frontend.Models
+@using Crud.Frontend.Services
+@inject NavigationManager NavigationManager
+@inject IProductServices ProductServices
+
+
+<h3>Edit Product</h3>
+
+<input type="text" class="mt-2 col-md-3" @bind="ProductModel.Name" />
+<br />
+<input type="number" class="mt-2 col-md-3" @bind="ProductModel.Price" />
+<br />
+
+<a class="btn btn-primary mt-3" onclick="@HandleSave">Save</a>
+<a class="btn btn-info mt-3" onclick="@HandleCancel">Cancel</a>
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+    public ProductModel ProductModel { get; set; } = new();
+
+    private void HandleCancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    private async Task HandleSave()
+    {
+        var response = await ProductServices.EditProduct(ProductModel);
+        NavigationManager.NavigateTo("/");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        ProductModel = await ProductServices.GetProductById(ProductId);
+    }
+
+}
