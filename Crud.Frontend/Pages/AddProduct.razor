@@ -7,11 +7,21 @@
 
 <h3>Add New Product</h3>
 
-<input type="text" class="mt-2 col-md-3" @bind="ProductModel.Name" /><br />
-<input type="number" class="mt-2 col-md-3" @bind="ProductModel.Price" /><br />
+<EditForm Model="ProductModel" OnInvalidSubmit="HandleSave">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label>Name:</label>
+    <input type="text" class="mt-2 col-md-3" @bind="ProductModel.Name" /><br />
+    <ValidationMessage For="() => ProductModel.Name" />
 
-<a class="btn btn-primary mt-3" onclick="@HandleSave">Save</a>
-<a class="btn btn-info mt-3" onclick="@HandleCancel">Cancel</a>
+    <label>Price:</label>
+    <input type="number" class="mt-2 col-md-3" @bind="ProductModel.Price" /><br />
+    <ValidationMessage For="() => ProductModel.Price" />
+
+    <button class="btn btn-primary mt-3" type="submit">Save</button>
+    <a class="btn btn-info mt-3" onclick="@HandleCancel">Cancel</a>
+</EditForm>
+
 
 @code {
     public ProductModel ProductModel { get; set; } = new();
