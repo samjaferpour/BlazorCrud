@@ -1,0 +1,46 @@
+﻿<div class="modal fade @_modalClass" id="exampleModal" tabindex="-1" style="display:@_modalDisplay">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">@ModalTitle</h5>
+                <button type="button" @onclick="Close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @ChildContent
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (backDrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    public bool backDrop = false;
+
+    [Parameter]
+    public string ModalTitle { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    string _modalDisplay = "none";
+    string _modalClass = string.Empty;
+
+    public void Open()
+    {
+        _modalDisplay = "block";
+        _modalClass = "show";
+        backDrop = true;
+    }
+    public void Close()
+    {
+        _modalDisplay = "none";
+        _modalClass = string.Empty;
+        backDrop = false;
+    }
+
+}

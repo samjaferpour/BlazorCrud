@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Crud.Frontend.Components
 @using Crud.Frontend.Models
 @using Crud.Frontend.Services
 @inject IProductServices ProductServices
@@ -7,9 +8,26 @@
 
 <PageTitle>Home</PageTitle>
 
+<ModalDialog ModalTitle="Create New Product" @ref="_modalDialog">
+    <EditForm Model="@ProductModel" OnInvalidSubmit="@HandleSave">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <label>Name:</label>
+        <input type="text" class="mt-2 form-control" @bind="ProductModel.Name" /><br />
+        <ValidationMessage For="() => ProductModel.Name" />
+
+        <label>Price:</label>
+        <input type="number" class="mt-2 form-control" @bind="ProductModel.Price" /><br />
+        <ValidationMessage For="() => ProductModel.Price" />
+
+        <button class="btn btn-primary mt-3" type="submit">Save</button>
+        <a class="btn btn-info mt-3" onclick="@CloseModal">Cancel</a>
+    </EditForm>
+</ModalDialog>
+
 <h3>Products List</h3>
 
-<a class="btn btn-success mt-3" href="add-product">Add New Product</a>
+<a class="btn btn-success mt-3" onclick="@OpenCreateModal">Add New Product</a>
 
 <table class="table table-hover table-striped mt-3">
     <thead>
@@ -60,6 +78,26 @@
         _loading = true;
         _products = await ProductServices.GetAllProducts();
         _loading = false;
+    }
+
+    ModalDialog _modalDialog;
+    void OpenCreateModal()
+    {
+        _modalDialog.backDrop = true;
+        _modalDialog.Open();
+    }
+
+    void CloseModal()
+    {
+        _modalDialog.Close();
+    }
+
+    public ProductModel ProductModel { get; set; } = new();
+    private async Task HandleSave()
+    {
+        var response = await ProductServices.AddNewProduct(ProductModel);
+        _products.Add(ProductModel);
+        CloseModal();
     }
 
 }
